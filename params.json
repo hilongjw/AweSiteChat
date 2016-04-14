@@ -1,0 +1,6 @@
+{
+  "name": "Awesitechat",
+  "tagline": "A horror site danmu project base on Vue.js & Wilddog",
+  "body": "# AweSiteChat\r\n\r\n> A Vue.js & Wilddog project\r\n\r\n## Build Setup\r\n\r\n``` bash\r\n# install dependencies\r\nnpm install\r\n\r\n# serve with hot reload at localhost:8080\r\nnpm run dev\r\n\r\n# build for production with minification\r\nnpm run build\r\n\r\n# run unit tests\r\nnpm run unit\r\n\r\n# run e2e tests\r\nnpm run e2e\r\n\r\n# run all tests\r\nnpm test\r\n```",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
