@@ -20,7 +20,7 @@ import covAlert from './components/alert.vue'
 const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
-const AVATAR = ['/dist/img/1.jpg', '/dist/img/2.jpg', '/dist/img/3.jpg', '/dist/img/4.jpg']
+const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 let currentSite = document.domain.replace(/\./g, '-')
 currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
