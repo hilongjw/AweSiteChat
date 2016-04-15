@@ -1,149 +1,127 @@
 <template>
-  <ul id="__covList">
-    <li 
-      class="__cov-item" 
-      v-for="item in list" 
-      :style="item.position"
-      track-by="_key"
-    >{{item.nickname + ': ' + item.word}}</li>
-    <li 
-      class="__cov-item" 
-      style="transform: translate3d(50vw, 210px, 0px); color: rgb(0, 255, 255);"
-    >Awe: ########9999</li>
-  </ul>
+  <cov-bullet v-for="item in list" :item="item" track-by="_key"></cov-bullet>
+  <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
     <button id="__settingButton" @click="showSet">设置</button>
-    <input type="color" v-if="showSetting" id="__covInputColor" v-model="color" value="#ffffff">
-    <input type="text" v-if="showSetting" id="__covInputNickName" v-model="nickname">
+    <input type="color" v-if="showSetting" id="__covInputColor" v-model="input.color" value="#ffffff">
+    <input type="text" v-if="showSetting" id="__covInputNickName" v-model="input.nickname">
   </div>
-  <div id="__covInput" v-show="showInputing">
-    <input 
-      type="text" 
-      name="say" 
-      id="__covInputText" 
-      placeholder="好尴尬，快说点什么！Enter 提交" 
-      v-model="say" 
-      @keyup.13="submit" 
-      @focus='inputFocus'
-      @blur='inputblur'
-      >
-    <label id="__covInputText__label" for="__covInputText"></label>
-  </div>
-  <button @click="want" id="__covAdd" class="want-btn" :class="{active: showInputing}">
-  <span class="__covAdd__text">+</span>
-  <span class="ink" :class="{'animate': repple_button.animate}"></span>
-  </button>
+  <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
+  <cov-button @click='showInput'></cov-button>
 </template>
 
 <script>
 import Wilddog from 'wilddog'
+import covButton from './components/button.vue'
+import covInput from './components/input.vue'
+import covBullet from './components/bullet.vue'
+import covAlert from './components/alert.vue'
+
+const AppId = 'livechat'
+const MaxCount = 20
+const roadWidth = 30
 
 let currentSite = document.domain.replace(/\./g, '-')
-let Site = new Wilddog('https://livechat.wilddogio.com/' + currentSite)
+currentSite = 'hilongjw-github-io'
+let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
 let removeComment = function () {
   List.on('child_added', (obj) => {
     let value = obj.val()
-    if (/ed2k/.test(value.word)) {
+    if (/(ed2k:|傻逼|共产党|蛤|习近平|龙佳文)/.test(value.word)) {
       let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
       ref.remove((data) => { console.log(1, data) })
     }
   })
 }
-
-const roadWidth = 30
+removeComment()
 
 let getRoadway = function () {
   return roadWidth * Math.floor(Math.random() * 10)
 }
 
-let addNewItem = function (obj, list) {
+let generateBullet = function (obj) {
   let y = getRoadway()
   let item = obj.val()
-  list.push({
+  return {
     _key: obj.key() + Math.random(),
     key: obj.key(),
+    avatar: 'https://www.google.com/images/nav_logo242.png',
     show: false,
     roadway: y,
     tick: item.tick,
-    position: {'transform': 'translate3d(100%, ' + y + 'px, 0)'},
+    position: {'transform': 'translate3d(200%, ' + y + 'px, 0)'},
     nickname: item.nickname,
     word: item.word,
-    color: item.color,
-    createddAt: item.createddAt
-  })
+    color: item.color
+  }
 }
 
-let loadHistory = function (self) {
-  List.once('value', (snapshot) => {
-    snapshot.forEach((obj) => {
-      addNewItem(obj, self.list)
-      self.lastKey = self.list[self.list.length - 1].key
-    })
+let addNewItem = function (obj, self, realtime) {
+  let newItem = generateBullet(obj)
+
+  if (realtime) {
+    self.list.push(newItem)
     self.$nextTick(() => {
-      self.queue()
+      self.render(newItem, true)
     })
-    loadRealtime(self)
-  })
+  } else if (self.list.length > MaxCount) {
+    self.preList.push(newItem)
+  } else {
+    self.list.push(newItem)
+    self.$nextTick(() => {
+      self.render(newItem, false)
+    })
+  }
 }
 
 let loadRealtime = function (self) {
-  List.orderByKey().startAt(self.lastKey).on('child_added', (newObj) => {
-    addNewItem(newObj, self.list)
-    self.$nextTick(() => {
-      self.realtimeQueue()
-    })
+  List.orderByChild('tick').on('child_added', (newObj) => {
+    if (self.tick < 5) {
+      addNewItem(newObj, self, false)
+    } else {
+      addNewItem(newObj, self, true)
+    }
   })
 }
 
 export default {
   data () {
     return {
-      color: '#ffffff',
-      say: '',
-      nickname: '路人',
+      index: 0,
+      input: {
+        color: 'rgb(113, 113, 113)',
+        say: '',
+        nickname: '路人',
+        avatar: null
+      },
       list: [],
+      preList: [],
       timer: null,
       tick: 0,
       lastKey: '',
       showSetting: false,
       showInputing: true,
-      repple_button: {
-        animate: false
+      Alert: {
+        message: '',
+        show: false
       }
     }
+  },
+  components: {
+    covButton,
+    covBullet,
+    covInput,
+    covAlert
   },
   created () {
     this.timer = setInterval(() => {
       this.tick++
     }, 1000)
-    loadHistory(this)
+    loadRealtime(this)
   },
   methods: {
-    inputFocus (e) {
-      e.target.parentNode.setAttribute('class', 'active')
-    },
-    inputblur (e) {
-      e.target.parentNode.setAttribute('class', '')
-    },
-    want (e) {
-      this.repple_button.animate = true
-      let button = e.target
-      let ink = button.querySelector('.ink')
-      if (ink) {
-        let d = Math.max(button.offsetHeight, button.offsetWidth)
-        let x = e.layerX - ink.offsetWidth / 2
-        let y = e.layerY - ink.offsetHeight / 2
-        ink.setAttribute('style', 'height: ' + d + 'px; width: ' + d + 'px; top: ' + y + 'px; left: ' + x + 'px;')
-      }
-      this.showInput()
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.repple_button.animate = false
-        }, 660)
-      })
-    },
     showInput () {
       this.showInputing = !this.showInputing
     },
@@ -157,38 +135,52 @@ export default {
       if (!realtime) {
         wait = item.tick * 1000
         outtime = wait - this.tick * 1000
+        outtime = outtime < 0 ? 0 : outtime
       }
       setTimeout(() => {
         item.position = {'transform': 'translate3d(-100vw, ' + item.roadway + 'px, 0)', 'color': item.color}
       }, outtime)
       setTimeout(() => {
         this.list.$remove(item)
-      }, outtime + 10000)
-    },
-    queue () {
-      for (let i = 0, l = this.list.length; i < l; i++) {
-        if (!this.list[i].show) {
-          this.render(this.list[i], false)
+        if (this.list.length < MaxCount && this.preList.length > 0) {
+          let preItem = this.preList.shift()
+          this.list.push(preItem)
+          this.$nextTick(() => {
+            this.render(preItem, false)
+          })
         }
-      }
+      }, outtime + 6000)
     },
-    realtimeQueue () {
-      for (let i = 0, l = this.list.length; i < l; i++) {
-        if (!this.list[i].show) {
-          this.render(this.list[i], true)
-        }
-      }
+    creatAlert (message) {
+      this.Alert.message = message
+      this.Alert.show = true
+      setTimeout(() => {
+        this.Alert.show = false
+        this.Alert.message = ''
+      }, 3000)
     },
     submit () {
-      if (!this.say) return
+      if (!this.input.say) {
+        this.creatAlert('应该说点什么')
+        return false
+      } else if (this.input.say.length > 40) {
+        this.creatAlert('发表失败，可能字数太多啦')
+        return false
+      }
       List.push({
-        nickname: this.nickname,
-        word: this.say,
-        color: this.color,
+        nickname: this.input.nickname,
+        word: this.input.say,
+        color: this.input.color,
         tick: this.tick,
         createddAt: Wilddog.ServerValue.TIMESTAMP
+      }, (err) => {
+        if (!err) {
+          this.input.say = ''
+        } else {
+          this.creatAlert('发表失败，可能字数太多啦')
+          console.log(err)
+        }
       })
-      this.say = ''
     }
   }
 }
@@ -197,33 +189,7 @@ export default {
 <style>
 html, body{
   height: 100%;
-}
-#__covList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-#__covList .__cov-item{
-  position: fixed;
-  right: 0;
-  top: 0;
-  background-color: rgb(3,169,244);
-  padding: .2rem .6em;
-  color: #fff;
-  will-change: transform;
-  border-radius: 3rem;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  -webkit-transition: cubic-bezier(.25, .5, .5, .25) transform 6s;
-  transition: cubic-bezier(.25, .5, .5, .25) transform 6s;
-  font-family: 'Roboto','Helvetica','Arial',sans-serif;
-}
-#__covInput {
-  position: fixed;
-  bottom: 20px;
-  right: 120px;
-  width: 300px;
-  padding: 0 0 20px 0;
+  background: #ccc;
 }
 #__covSubmit {
   padding: .5em 1em;
@@ -260,80 +226,6 @@ html, body{
   border-radius: 2px;
   margin-right: -.5em;
   outline: none;
-}
-#__covInputText {
-  border: none;
-  border-bottom: 1px solid rgba(0,0,0,.12);
-  display: block;
-  font-size: 16px;
-  font-family: "Helvetica","Arial",sans-serif;
-  margin: 0;
-  padding: 4px 0;
-  width: 100%;
-  background: 0 0;
-  text-align: left;
-  color: inherit;
-  outline: none;
-}
-#__covInputText__label {
-  bottom: 0;
-  color: rgba(0,0,0,.26);
-  font-size: 16px;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-  position: absolute;
-  display: block;
-  top: 24px;
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-align: left;
-}
-#__covInputText__label::after{
-  content: '';
-  background-color: #3f51b5;
-  bottom: 20px;
-  height: 2px;
-  left: 45%;
-  position: absolute;
-  transition-duration: .2s;
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
-  visibility: hidden;
-  width: 10px;
-}
-.active #__covInputText__label::after {
-  visibility: visible;
-  left: 0%;
-  width: 100%;
-}
-.ink {
-  display: block; position: absolute;
-  background: hsl(180, 40%, 80%);
-  border-radius: 100%;
-  transform: scale(0);
-}
-.ink.animate {animation: ripple 0.65s linear;}
-@keyframes ripple {
-  100% {opacity: 0; transform: scale(2.5);}
-}
-.want-btn {
-    border-radius: 100%;
-    overflow: hidden;
-    font-size: 24px;
-    height: 56px;
-    margin: auto;
-    min-width: 56px;
-    width: 56px;
-    padding: 0;
-    color: #fff;
-    background-color: #00bbd6;
-    box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12),0 1px 1px 0 rgba(0,0,0,.24);
-    position: relative;
-    line-height: normal;
-    border: none;
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
-    outline: none;
 }
 #__covAdd {
   position: fixed;
