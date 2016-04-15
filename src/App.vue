@@ -42,6 +42,16 @@ let currentSite = document.domain.replace(/\./g, '-')
 let Site = new Wilddog('https://livechat.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
+let removeComment = function () {
+  List.on('child_added', (obj) => {
+    let value = obj.val()
+    if (/ed2k/.test(value.word)) {
+      let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
+      ref.remove((data) => { console.log(1, data) })
+    }
+  })
+}
+
 const roadWidth = 30
 
 let getRoadway = function () {
