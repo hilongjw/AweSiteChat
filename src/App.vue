@@ -20,7 +20,7 @@ import covAlert from './components/alert.vue'
 const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
-
+const AVATAR = ['/dist/img/1.jpg', '/dist/img/2.jpg', '/dist/img/3.jpg', '/dist/img/4.jpg']
 let currentSite = document.domain.replace(/\./g, '-')
 currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
@@ -47,7 +47,7 @@ let generateBullet = function (obj) {
   return {
     _key: obj.key() + Math.random(),
     key: obj.key(),
-    avatar: 'https://www.google.com/images/nav_logo242.png',
+    avatar: AVATAR[Math.floor(Math.random() * 4)],
     show: false,
     roadway: y,
     tick: item.tick,
@@ -89,7 +89,6 @@ let loadRealtime = function (self) {
 export default {
   data () {
     return {
-      index: 0,
       input: {
         color: 'rgb(113, 113, 113)',
         say: '',
@@ -100,7 +99,6 @@ export default {
       preList: [],
       timer: null,
       tick: 0,
-      lastKey: '',
       showSetting: false,
       showInputing: true,
       Alert: {
@@ -130,10 +128,9 @@ export default {
     },
     render (item, realtime) {
       item.show = true
-      let wait = 0
+      let wait = item.tick * 1000
       let outtime = 0
       if (!realtime) {
-        wait = item.tick * 1000
         outtime = wait - this.tick * 1000
         outtime = outtime < 0 ? 0 : outtime
       }
