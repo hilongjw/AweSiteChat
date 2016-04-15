@@ -186,7 +186,6 @@ export default {
 <style>
 html, body{
   height: 100%;
-  background: #ccc;
 }
 #__covSubmit {
   padding: .5em 1em;
