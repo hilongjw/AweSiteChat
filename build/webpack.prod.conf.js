@@ -10,7 +10,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('[name].[chunkhash].js'),
+    filename: utils.assetsPath('[name].js'),
     chunkFilename: utils.assetsPath('[id].[chunkhash].js')
   },
   plugins: [

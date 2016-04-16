@@ -20,7 +20,8 @@ import covAlert from './components/alert.vue'
 const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
-const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
+// const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
+const AVATAR = ['http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0']
 let currentSite = document.domain.replace(/\./g, '-')
 currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
@@ -49,9 +50,10 @@ let generateBullet = function (obj) {
     key: obj.key(),
     avatar: AVATAR[Math.floor(Math.random() * 4)],
     show: false,
+    flying: false,
     roadway: y,
     tick: item.tick,
-    position: {'transform': 'translate3d(200%, ' + y + 'px, 0)'},
+    position: {'top': y + 'px', 'color': item.color},
     nickname: item.nickname,
     word: item.word,
     color: item.color
@@ -127,15 +129,19 @@ export default {
       this.showSetting = !this.showSetting
     },
     render (item, realtime) {
-      item.show = true
       let wait = item.tick * 1000
       let outtime = 0
+
+      item.show = true
+
       if (!realtime) {
         outtime = wait - this.tick * 1000
         outtime = outtime < 0 ? 0 : outtime
+      } else {
+        outtime = 500
       }
       setTimeout(() => {
-        item.position = {'transform': 'translate3d(-100vw, ' + item.roadway + 'px, 0)', 'color': item.color}
+        item.flying = true
       }, outtime)
       setTimeout(() => {
         this.list.$remove(item)
