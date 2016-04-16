@@ -38,11 +38,11 @@ let removeComment = function () {
 }
 removeComment()
 
-let getRoadway = function () {
+const getRoadway = function () {
   return roadWidth * Math.floor(Math.random() * 10)
 }
 
-let generateBullet = function (obj) {
+const generateBullet = function (obj) {
   let y = getRoadway()
   let item = obj.val()
   return {
@@ -60,7 +60,7 @@ let generateBullet = function (obj) {
   }
 }
 
-let addNewItem = function (obj, self, realtime) {
+const addNewItem = function (obj, self, realtime) {
   let newItem = generateBullet(obj)
 
   if (realtime) {
@@ -78,7 +78,7 @@ let addNewItem = function (obj, self, realtime) {
   }
 }
 
-let loadRealtime = function (self) {
+const loadRealtime = function (self) {
   List.orderByChild('tick').on('child_added', (newObj) => {
     if (self.tick < 5) {
       addNewItem(newObj, self, false)

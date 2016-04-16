@@ -2,13 +2,20 @@
 // http://nightwatchjs.org/guide#usage
 
 module.exports = {
-  'default e2e tests': function (browser) {
+  'awe-site-chat-test': function (browser) {
     browser
     .url('http://localhost:8080')
-      .waitForElementVisible('#app', 5000)
-      .assert.elementPresent('.logo')
-      .assert.containsText('h1', 'Hello World!')
-      .assert.elementCount('p', 3)
+      .waitForElementPresent('#__covAlert', 10000)
+      .click('#__covAdd')
+      .assert.cssClassPresent(".ink", "animate")
+      .waitForElementNotVisible('#__covInput', 100)
+      .click('#__covAdd')
+      .waitForElementVisible('#__covInput', 100)
+      .click('#__covInputText')
+      .assert.cssClassPresent("#__covInput", "active")
+      .setValue('#__covInputText', 'nightwatch')
+      .sendKeys('#__covInputText', browser.Keys.ENTER)
+      .waitForElementPresent('.__cov-item', 5000)
       .end()
   }
 }
