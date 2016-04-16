@@ -23,14 +23,13 @@ const roadWidth = 30
 // const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 const AVATAR = ['http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0']
 let currentSite = document.domain.replace(/\./g, '-')
-currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
 let removeComment = function () {
   List.on('child_added', (obj) => {
     let value = obj.val()
-    if (/(ed2k:|傻逼|共产党|蛤|习近平|龙佳文)/.test(value.word)) {
+    if (/(ed2k:|某些和谐词)/.test(value.word)) {
       let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
       ref.remove((data) => { console.log(1, data) })
     }
