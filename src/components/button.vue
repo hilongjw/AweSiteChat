@@ -65,4 +65,12 @@ export default {
 @keyframes ripple {
   100% {opacity: 0; transform: scale(2.5);}
 }
+.__covAdd__text {
+  transform: rotate(0deg);
+  transition: transform .2s;
+}
+.active .__covAdd__text {
+  display: inline-block;
+  transform: rotate(45deg);
+}
 </style>

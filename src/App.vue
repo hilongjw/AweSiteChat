@@ -187,12 +187,6 @@ export default {
 html, body{
   height: 100%;
 }
-#__covSubmit {
-  padding: .5em 1em;
-  background-color: #5AA2FF;
-  border: none;
-  color: #fff;
-}
 #__covInputColor {
   padding: 0;
   border: none;
@@ -227,13 +221,5 @@ html, body{
   position: fixed;
   bottom: 20px;
   right: 20px;
-}
-.__covAdd__text {
-  transform: rotate(0deg);
-  transition: transform .2s;
-}
-.active .__covAdd__text {
-  display: inline-block;
-  transform: rotate(45deg);
 }
 </style>
