@@ -14,14 +14,8 @@
 import covButton from './button.vue'
 export default {
   props: ['close'],
-  data () {
-    return {
-    }
-  },
   components: {
     covButton
-  },
-  methods: {
   }
 }
 </script>

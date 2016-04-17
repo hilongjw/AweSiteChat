@@ -2,14 +2,15 @@
   <cov-bullet v-for="item in list" :item="item" track-by="_key"></cov-bullet>
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
-    <cov-button id="__settingButton" v-show="showInputing" @click="showSet">SETTING</cov-button>
+    <cov-button id="__settingButton" v-show="showState.inputting" @click="showSet">SETTING</cov-button>
   </div>
-  <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
+  <cov-input :submit="submit" :input="input" v-show="showState.inputting"></cov-input>
   <cov-fab-button @click='showInput'></cov-fab-button>
-  <modal v-show="showModal" :close="hideModal">
+  <modal v-show="showState.modal" :close="hideModal">
     <textfield :textfield="nickname"></textfield>
     <textfield :textfield="avatar"></textfield>
   </modal>
+  <cov-list :check-list="checkList" v-if="showState.checkList" :close="hideCheckList"></cov-list>
 </template>
 
 <script>
@@ -21,6 +22,7 @@ import covBullet from './components/bullet.vue'
 import covAlert from './components/alert.vue'
 import textfield from './components/textfield.vue'
 import modal from './components/modal.vue'
+import covList from './components/list.vue'
 
 const AppId = 'livechat'
 const MaxCount = 20
@@ -69,7 +71,7 @@ const generateBullet = function (obj) {
 
 const addNewItem = function (obj, self, realtime) {
   let newItem = generateBullet(obj)
-
+  self.checkList.push(newItem)
   if (realtime) {
     self.list.push(newItem)
     self.$nextTick(() => {
@@ -145,13 +147,16 @@ export default {
         say: '',
         avatar: null
       },
-      showModal: false,
+      showState: {
+        modal: false,
+        inputting: true,
+        checkList: false
+      },
       list: [],
       preList: [],
+      checkList: [],
       timer: null,
       tick: 0,
-      showSetting: false,
-      showInputing: true,
       Alert: {
         message: '',
         show: false
@@ -165,7 +170,8 @@ export default {
     covButton,
     covAlert,
     textfield,
-    modal
+    modal,
+    covList
   },
   created () {
     this.timer = setInterval(() => {
@@ -173,15 +179,34 @@ export default {
     }, 1000)
     loadRealtime(this)
   },
+  events: {
+    'del-item': function (item) {
+      this.delItem(item)
+    }
+  },
   methods: {
+    delItem (item) {
+      let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + item.key)
+      ref.remove((data) => {
+        if (!data) {
+          this.checkList.$remove(item)
+          this.creatAlert('del done')
+        } else {
+          this.creatAlert('failed to del', item.username, item.word)
+        }
+      })
+    },
+    hideCheckList () {
+      this.showState.checkList = false
+    },
     showInput () {
-      this.showInputing = !this.showInputing
+      this.showState.inputting = !this.showState.inputting
     },
     showSet () {
-      this.showModal = !this.showModal
+      this.showState.modal = !this.showState.modal
     },
     hideModal () {
-      this.showModal = false
+      this.showState.modal = false
       setLocalStorage('nickname', this.nickname.value)
       setLocalStorage('avatar', this.avatar.value)
     },
@@ -248,16 +273,6 @@ export default {
 </script>
 
 <style>
-html, body{
-  height: 100%;
-}
-#__covInputColor {
-  padding: 0;
-  border: none;
-  width: 1.6rem;
-  height: 1.8rem;
-  vertical-align: bottom;
-}
 #__covMenu {
   position: fixed;
   bottom: 100px;
