@@ -3,6 +3,7 @@
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
     <cov-button id="__settingButton" v-show="showState.inputting" @click="showSet">SETTING</cov-button>
+    <cov-button id="__adminButton" v-show="showState.admin" @click="showAdmin">ADMIN</cov-button>
   </div>
   <cov-input :submit="submit" :input="input" v-show="showState.inputting"></cov-input>
   <cov-fab-button @click='showInput'></cov-fab-button>
@@ -150,7 +151,8 @@ export default {
       showState: {
         modal: false,
         inputting: true,
-        checkList: false
+        checkList: false,
+        admin: getLocalStorage('nickname') === 'Awe_admin'
       },
       list: [],
       preList: [],
@@ -185,6 +187,9 @@ export default {
     }
   },
   methods: {
+    showAdmin () {
+      this.showState.checkList = !this.showState.checkList
+    },
     delItem (item) {
       let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + item.key)
       ref.remove((data) => {
