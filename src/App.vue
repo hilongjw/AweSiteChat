@@ -3,7 +3,7 @@
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
     
-    <button id="__settingButton" @click="showSet">SETTING</button>
+    <button id="__settingButton" v-show="showInputing" @click="showSet">SETTING</button>
   </div>
   <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
   <cov-fab-button @click='showInput'></cov-fab-button>
@@ -27,9 +27,8 @@ const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
-const AVATAR = ['http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0']
+const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 let currentSite = document.domain.replace(/\./g, '-')
-currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
