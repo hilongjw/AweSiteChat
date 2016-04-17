@@ -1,10 +1,14 @@
 <template>
   <div class="__cov-check">
-    <div class="__cov-check-title">弹幕管理</div>
+    <div class="__cov-check-title">
+    弹幕管理
+    <textfield :textfield="search"></textfield>
+    </div>
     <div class="__cov-check-list">
       <div 
         class="__cov-item __cov-check-item"
-        v-for="item in checkList"
+        v-for="item in showList"
+        track-by="_key"
       >
         <img class="__cov-item-avatar" v-if="item.avatar" :src="item.avatar">
         <span class="__cov-item-username">
@@ -22,11 +26,36 @@
 
 <script>
 import covButton from './button.vue'
+import textfield from './textfield.vue'
 
 export default {
   props: ['checkList', 'close'],
+  data () {
+    return {
+      search: {
+        placeholder: 'Search',
+        value: ''
+      }
+    }
+  },
+  computed: {
+    showList () {
+      if (this.search.value === '') {
+        return this.checkList
+      } else {
+        let haveIt = new RegExp(this.search.value, 'g')
+        return this.checkList.filter((item) => {
+          if (haveIt.test(item.word)) {
+            return true
+          }
+          return false
+        })
+      }
+    }
+  },
   components: {
-    covButton
+    covButton,
+    textfield
   },
   methods: {
     delItem (item) {
