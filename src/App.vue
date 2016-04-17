@@ -2,26 +2,31 @@
   <cov-bullet v-for="item in list" :item="item" track-by="_key"></cov-bullet>
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
-    <textfield :textfield="nickname" v-if="showSetting"></textfield>
+    
     <button id="__settingButton" @click="showSet">SETTING</button>
   </div>
   <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
-  <cov-button @click='showInput'></cov-button>
+  <cov-fab-button @click='showInput'></cov-fab-button>
+  <modal v-show="showModal" :close="hideModal">
+    <textfield :textfield="nickname"></textfield>
+    <textfield :textfield="avatar"></textfield>
+  </modal>
 </template>
 
 <script>
 import Wilddog from 'wilddog'
-import covButton from './components/button.vue'
+import covFabButton from './components/fabButton.vue'
+// import covButton from './components/button.vue'
 import covInput from './components/input.vue'
 import covBullet from './components/bullet.vue'
 import covAlert from './components/alert.vue'
 import textfield from './components/textfield.vue'
+import modal from './components/modal.vue'
 
 const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
-// const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 const AVATAR = ['http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0']
 let currentSite = document.domain.replace(/\./g, '-')
 currentSite = 'hilongjw-github-io'
@@ -51,7 +56,7 @@ const generateBullet = function (obj) {
   return {
     _key: obj.key() + Math.random(),
     key: obj.key(),
-    avatar: AVATAR[Math.floor(Math.random() * 4)],
+    avatar: item.avatar ? item.avatar : AVATAR[Math.floor(Math.random() * 4)],
     show: false,
     flying: false,
     roadway: y,
@@ -119,11 +124,16 @@ export default {
         value: getLocalStorage('nickname'),
         placeholder: 'NickName'
       },
+      avatar: {
+        value: getLocalStorage('avatar'),
+        placeholder: 'Avatar'
+      },
       input: {
         color: 'rgb(113, 113, 113)',
         say: '',
         avatar: null
       },
+      showModal: false,
       list: [],
       preList: [],
       timer: null,
@@ -137,11 +147,12 @@ export default {
     }
   },
   components: {
-    covButton,
+    covFabButton,
     covBullet,
     covInput,
     covAlert,
-    textfield
+    textfield,
+    modal
   },
   created () {
     this.timer = setInterval(() => {
@@ -154,8 +165,12 @@ export default {
       this.showInputing = !this.showInputing
     },
     showSet () {
-      this.showSetting = !this.showSetting
+      this.showModal = !this.showModal
+    },
+    hideModal () {
+      this.showModal = false
       setLocalStorage('nickname', this.nickname.value)
+      setLocalStorage('avatar', this.avatar.value)
     },
     render (item, realtime) {
       let wait = item.tick * 1000
@@ -202,6 +217,7 @@ export default {
       List.push({
         nickname: this.nickname.value,
         word: this.input.say,
+        avatar: this.avatar.value,
         color: this.input.color,
         tick: this.tick,
         createddAt: Wilddog.ServerValue.TIMESTAMP
@@ -241,6 +257,7 @@ html, body{
   color: #00BBD6;
   -webkit-transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+  outline: none;
 }
 #__settingButton:hover {
   background-color: rgba(158,158,158,.2);

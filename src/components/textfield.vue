@@ -35,9 +35,7 @@ export default {
 
 <style>
 .cov-textfield {
-  position: fixed;
-  bottom: 130px;
-  right: 10px;
+  position: relative;
   padding: 20px 0;
   font-family: 'Roboto','Helvetica', "Microsoft YaHei", 'Arial', sans-serif;
 }

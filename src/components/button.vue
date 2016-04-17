@@ -1,7 +1,7 @@
 <template>
-  <button @click="reppleClick" id="__covAdd" class="want-btn" :class="{active: repple_button.toggle}">
-    <span class="__covAdd__text">+</span>
-    <span class="ink" :class="{'animate': repple_button.animate}"></span>
+  <button @click="reppleClick"  class="__cov-button-ripple" :class="{active: repple_button.toggle}">
+    <slot></slot>
+    <span class="__cov-ripple" :class="{'animate': repple_button.animate}"></span>
   </button>
 </template>
 
@@ -19,12 +19,12 @@ export default {
     reppleClick (e) {
       this.repple_button.animate = true
       let button = e.target
-      let ink = button.querySelector('.ink')
-      if (ink) {
+      let ripple = button.querySelector('.__cov-ripple')
+      if (ripple) {
         let d = Math.max(button.offsetHeight, button.offsetWidth)
-        let x = e.layerX - ink.offsetWidth / 2
-        let y = e.layerY - ink.offsetHeight / 2
-        ink.setAttribute('style', 'height: ' + d + 'px; width: ' + d + 'px; top: ' + y + 'px; left: ' + x + 'px;')
+        let x = e.layerX - ripple.offsetWidth / 2
+        let y = e.layerY - ripple.offsetHeight / 2
+        ripple.setAttribute('style', 'height: ' + d + 'px; width: ' + d + 'px; top: ' + y + 'px; left: ' + x + 'px;')
       }
       this.$nextTick(() => {
         setTimeout(() => {
@@ -37,45 +37,49 @@ export default {
 </script>
 
 <style>
-#__covAdd {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+.__cov-button-ripple {
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  color: #000;
+  position: relative;
+  height: 36px;
+  min-width: 64px;
+  padding: 0 16px;
+  display: inline-block;
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0;
+  overflow: hidden;
+  will-change: box-shadow,transform;
+  -webkit-transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  line-height: 36px;
+  vertical-align: middle;
+  min-width: 96px;
 }
-.want-btn {
-    border-radius: 100%;
-    overflow: hidden;
-    font-size: 24px;
-    height: 56px;
-    margin: auto;
-    min-width: 56px;
-    width: 56px;
-    padding: 0;
-    color: #fff;
-    background-color: #00bbd6;
-    box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12),0 1px 1px 0 rgba(0,0,0,.24);
-    position: relative;
-    line-height: normal;
-    border: none;
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
-    outline: none;
+.__cov-button-ripple:hover {
+  background-color: hsla(0,0%,62%,.2);
 }
-.ink {
-  display: block; position: absolute;
-  background: hsl(180, 40%, 80%);
+.__cov-ripple {
+  display: block; 
+  position: absolute;
+  background: hsla(0, 0%, 65%, 0.66);
   border-radius: 100%;
   transform: scale(0);
 }
-.ink.animate {animation: ripple 0.65s linear;}
+.__cov-ripple.animate {
+  animation: ripple 0.65s linear;
+}
+
 @keyframes ripple {
   100% {opacity: 0; transform: scale(2.5);}
-}
-.__covAdd__text {
-  transform: rotate(0deg);
-  transition: transform .2s;
-}
-.active .__covAdd__text {
-  display: inline-block;
-  transform: rotate(45deg);
 }
 </style>
