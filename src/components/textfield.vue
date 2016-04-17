@@ -16,7 +16,7 @@ export default {
   data () {
     return {
       active: false,
-      hasValue: false
+      hasValue: this.textfield.value !== ''
     }
   },
   props: ['textfield'],
