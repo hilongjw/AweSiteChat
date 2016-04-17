@@ -28,11 +28,12 @@ const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
 const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
+
 let currentSite = document.domain.replace(/\./g, '-')
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
-let removeComment = function () {
+const removeComment = function () {
   List.on('child_added', (obj) => {
     let value = obj.val()
     if (/(ed2k:|某些和谐词)/.test(value.word)) {
@@ -116,8 +117,21 @@ const setLocalStorage = function (key, value) {
   return false
 }
 
+const checkGlobalInit = function () {
+  let globalInit = window.$__covInit
+  if (globalInit) {
+    if (globalInit.nickname) {
+      setLocalStorage('nickname', globalInit.nickname)
+    }
+    if (globalInit.avatar) {
+      setLocalStorage('avatar', globalInit.avatar)
+    }
+  }
+}
+
 export default {
   data () {
+    checkGlobalInit()
     return {
       nickname: {
         value: getLocalStorage('nickname'),

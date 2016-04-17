@@ -2,6 +2,17 @@
 
 > A Vue.js & Wilddog project
 
+## Usage
+
+set your site user's nickname and avatar
+
+```javascript
+window.$__covInit = {
+  nickname: 'Awe',
+  avatar: 'http://tp1.sinaimg.cn/1765813240/180/40054316852/1'
+}
+```
+
 ## Build Setup
 
 ``` bash
