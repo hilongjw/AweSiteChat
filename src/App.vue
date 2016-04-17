@@ -2,8 +2,7 @@
   <cov-bullet v-for="item in list" :item="item" track-by="_key"></cov-bullet>
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
-    
-    <button id="__settingButton" v-show="showInputing" @click="showSet">SETTING</button>
+    <cov-button id="__settingButton" v-show="showInputing" @click="showSet">SETTING</cov-button>
   </div>
   <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
   <cov-fab-button @click='showInput'></cov-fab-button>
@@ -16,7 +15,7 @@
 <script>
 import Wilddog from 'wilddog'
 import covFabButton from './components/fabButton.vue'
-// import covButton from './components/button.vue'
+import covButton from './components/button.vue'
 import covInput from './components/input.vue'
 import covBullet from './components/bullet.vue'
 import covAlert from './components/alert.vue'
@@ -163,6 +162,7 @@ export default {
     covFabButton,
     covBullet,
     covInput,
+    covButton,
     covAlert,
     textfield,
     modal
@@ -261,16 +261,11 @@ html, body{
 #__covMenu {
   position: fixed;
   bottom: 100px;
-  right: 10px;
+  right: 5px;
 }
 #__settingButton {
-  padding: .5em 1em;
   background-color: rgba(0,0,0,0);
-  border: none;
   color: #00BBD6;
-  -webkit-transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
-  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
-  outline: none;
 }
 #__settingButton:hover {
   background-color: rgba(158,158,158,.2);
