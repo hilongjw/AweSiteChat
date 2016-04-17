@@ -1,6 +1,8 @@
 // 1. start the dev server using production config
 process.env.NODE_ENV = 'testing'
 var server = require('../../build/dev-server.js')
+var os = require('os')
+var isWin = os.platform() == 'win32'
 
 // 2. run the nightwatch test suite against it
 // to run in additional browsers:
@@ -10,7 +12,7 @@ var server = require('../../build/dev-server.js')
 // http://nightwatchjs.org/guide#settings-file
 var spawn = require('cross-spawn')
 var runner = spawn(
-  './node_modules/.bin/nightwatch',
+  isWin ? '.\\node_modules\\.bin\\nightwatch' : './node_modules/.bin/nightwatch',
   [
     '--config', 'test/e2e/nightwatch.conf.js',
     '--env', 'chrome'
