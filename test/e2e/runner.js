@@ -10,7 +10,7 @@ var server = require('../../build/dev-server.js')
 // http://nightwatchjs.org/guide#settings-file
 var spawn = require('cross-spawn')
 var runner = spawn(
-  'nightwatch',
+  './node_modules/.bin/nightwatch',
   [
     '--config', 'test/e2e/nightwatch.conf.js',
     '--env', 'chrome'
