@@ -1,42 +1,47 @@
 <template>
-  <div id="__covInput">
-    <input 
-      type="text" 
-      name="say" 
-      id="__covInputText"
-      v-model="input.say" 
-      @keyup.13="submit"
+  <div class="cov-textfield" :class="{active: (active || textfield.value), 'has-value': hasValue}">
+    <input
+      class="cov-textfield-text"
+      type="text"
+      v-model="textfield.value"
       @focus='inputFocus'
       @blur='inputblur'
       >
-    <label id="__covInputText__label" for="__covInputText">好尴尬，快说点什么！Enter 提交</label>
+    <label class="cov-textfield-label">{{textfield.placeholder}}</label>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['input', 'submit'],
+  data () {
+    return {
+      active: false,
+      hasValue: false
+    }
+  },
+  props: ['textfield'],
   methods: {
     inputFocus (e) {
-      e.target.parentNode.setAttribute('class', 'active')
+      this.hasValue = false
+      this.active = true
     },
     inputblur (e) {
-      e.target.parentNode.setAttribute('class', '')
+      this.hasValue = this.textfield.value !== ''
+      this.active = false
     }
   }
 }
 </script>
 
 <style>
-#__covInput {
+.cov-textfield {
   position: fixed;
-  bottom: 20px;
-  right: 120px;
-  width: 300px;
+  bottom: 130px;
+  right: 10px;
   padding: 20px 0;
   font-family: 'Roboto','Helvetica', "Microsoft YaHei", 'Arial', sans-serif;
 }
-#__covInputText {
+.cov-textfield-text {
   border: none;
   border-bottom: 1px solid rgba(0,0,0,.12);
   display: block;
@@ -49,7 +54,7 @@ export default {
   color: inherit;
   outline: none;
 }
-#__covInputText__label {
+.cov-textfield-label {
   bottom: 0;
   color: rgba(0,0,0,.26);
   font-size: 16px;
@@ -66,10 +71,10 @@ export default {
   transition-duration: .2s;
   transition-timing-function: cubic-bezier(.4,0,.2,1);
 }
-#__covInputText__label::after{
+.cov-textfield-label::after{
   content: '';
   background-color: #3f51b5;
-  bottom: 20px;
+  top: 20px;
   height: 2px;
   left: 45%;
   position: absolute;
@@ -78,33 +83,20 @@ export default {
   visibility: hidden;
   width: 10px;
 }
-.active #__covInputText__label {
+.active .cov-textfield-label {
   top: 4px;
   color: #3f51b5;
   font-size: 12px;
 }
-.active #__covInputText__label::after {
+.active.has-value .cov-textfield-label::after {
+  visibility: hidden;
+  width: 10px;
+  left: 45%;
+}
+.active .cov-textfield-label::after {
   visibility: visible;
   left: 0%;
   width: 100%;
-}
-@media (max-width: 960px) { 
-  #__covInput {
-    width: 100%;
-    left: 0;
-    bottom: -20px;
-    background-color: #fff;
-    padding-top: 0;
-  }
-  #__covInputText {
-    padding: 10px;
-  }
-  #__covInputText__label {
-    top: 8px;
-    left: 5px;
-  }
-  .active #__covInputText__label{
-    top: -14px;
-  }
+  top: 40px;
 }
 </style>

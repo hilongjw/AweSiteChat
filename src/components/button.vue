@@ -37,6 +37,11 @@ export default {
 </script>
 
 <style>
+#__covAdd {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
 .want-btn {
     border-radius: 100%;
     overflow: hidden;

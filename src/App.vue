@@ -2,9 +2,8 @@
   <cov-bullet v-for="item in list" :item="item" track-by="_key"></cov-bullet>
   <cov-alert :alert="Alert"></cov-alert>
   <div id="__covMenu">
-    <button id="__settingButton" @click="showSet">设置</button>
-    <input type="color" v-if="showSetting" id="__covInputColor" v-model="input.color" value="#ffffff">
-    <input type="text" v-if="showSetting" id="__covInputNickName" v-model="input.nickname">
+    <textfield :textfield="nickname" v-if="showSetting"></textfield>
+    <button id="__settingButton" @click="showSet">SETTING</button>
   </div>
   <cov-input :submit="submit" :input="input" v-show="showInputing"></cov-input>
   <cov-button @click='showInput'></cov-button>
@@ -16,13 +15,16 @@ import covButton from './components/button.vue'
 import covInput from './components/input.vue'
 import covBullet from './components/bullet.vue'
 import covAlert from './components/alert.vue'
+import textfield from './components/textfield.vue'
 
 const AppId = 'livechat'
 const MaxCount = 20
 const roadWidth = 30
+const localStorage = window.localStorage
 // const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 const AVATAR = ['http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0', 'http://echo-image.qiniucdn.com/2a8d460ecf45714bdc425a8193e5caa109d22f67?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!250x250r/gravity/Center/crop/250x250/dx/0/dy/0&imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!50x50r/gravity/Center/crop/50x50/dx/0/dy/0']
 let currentSite = document.domain.replace(/\./g, '-')
+currentSite = 'hilongjw-github-io'
 let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
 let List = Site.child('list')
 
@@ -37,8 +39,10 @@ let removeComment = function () {
 }
 removeComment()
 
+let roadIndex = 0
 const getRoadway = function () {
-  return roadWidth * Math.floor(Math.random() * 10)
+  roadIndex === 10 ? roadIndex = 0 : roadIndex++
+  return roadWidth * roadIndex
 }
 
 const generateBullet = function (obj) {
@@ -87,13 +91,37 @@ const loadRealtime = function (self) {
   })
 }
 
+const getLocalStorage = function (key) {
+  if (localStorage && localStorage.covChat) {
+    let tmp = JSON.parse(localStorage.covChat)
+    return tmp[key]
+  }
+  return ''
+}
+
+const setLocalStorage = function (key, value) {
+  if (localStorage) {
+    let tmp = {}
+    if (localStorage.covChat) {
+      tmp = JSON.parse(localStorage.covChat)
+    }
+    tmp[key] = value
+    localStorage.covChat = JSON.stringify(tmp)
+    return true
+  }
+  return false
+}
+
 export default {
   data () {
     return {
+      nickname: {
+        value: getLocalStorage('nickname'),
+        placeholder: 'NickName'
+      },
       input: {
         color: 'rgb(113, 113, 113)',
         say: '',
-        nickname: '路人',
         avatar: null
       },
       list: [],
@@ -112,7 +140,8 @@ export default {
     covButton,
     covBullet,
     covInput,
-    covAlert
+    covAlert,
+    textfield
   },
   created () {
     this.timer = setInterval(() => {
@@ -126,6 +155,7 @@ export default {
     },
     showSet () {
       this.showSetting = !this.showSetting
+      setLocalStorage('nickname', this.nickname.value)
     },
     render (item, realtime) {
       let wait = item.tick * 1000
@@ -170,7 +200,7 @@ export default {
         return false
       }
       List.push({
-        nickname: this.input.nickname,
+        nickname: this.nickname.value,
         word: this.input.say,
         color: this.input.color,
         tick: this.tick,
@@ -201,30 +231,18 @@ html, body{
 }
 #__covMenu {
   position: fixed;
-  bottom: 0;
-  right: 16rem;
+  bottom: 100px;
+  right: 10px;
 }
 #__settingButton {
   padding: .5em 1em;
-  background-color: #5AA2FF;
+  background-color: rgba(0,0,0,0);
   border: none;
-  color: #fff;
-  opacity: 0;
+  color: #00BBD6;
+  -webkit-transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
 }
 #__settingButton:hover {
-  opacity: 1;
-}
-#__covInputNickName {
-  max-width: 5rem;
-  padding: .4em;
-  border: 1px solid #5AA2FF;
-  border-radius: 2px;
-  margin-right: -.5em;
-  outline: none;
-}
-#__covAdd {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  background-color: rgba(158,158,158,.2);
 }
 </style>

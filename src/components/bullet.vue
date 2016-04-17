@@ -5,7 +5,11 @@
     :class="{'__cov-flying': item.flying}"
   >
   <img class="__cov-item-avatar" v-if="item.avatar" :src="item.avatar">
-  {{item.nickname + ': ' + item.word}}</div>
+  <span class="__cov-item-username">
+    {{item.nickname}}
+  </span>
+  {{item.word}}
+  </div>
 </template>
 
 <script>
@@ -40,6 +44,9 @@ export default {
   width: 42px;
   height: 42px;
   border-radius: 50%;
+}
+.__cov-item-username {
+  color: #00BBD6;
 }
 .__cov-flying {
   transform: translateX(-500px);
