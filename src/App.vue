@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import Wilddog from 'wilddog'
+// import Wilddog from 'wilddog'
+import Firebase from 'firebase'
 import covFabButton from './components/fabButton.vue'
 import covButton from './components/button.vue'
 import covInput from './components/input.vue'
@@ -25,26 +26,48 @@ import textfield from './components/textfield.vue'
 import modal from './components/modal.vue'
 import covList from './components/list.vue'
 
-const AppId = 'livechat'
+const DB = Firebase
+const AppId = 'livevue'
 const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
 const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
 
 let currentSite = document.domain.replace(/\./g, '-')
-let Site = new Wilddog('https://' + AppId + '.wilddogio.com/' + currentSite)
+let Site = new DB('https://' + AppId + '.firebaseio.com/' + currentSite)
 let List = Site.child('list')
+let User = Site.child('user')
 
-const removeComment = function () {
-  List.on('child_added', (obj) => {
-    let value = obj.val()
-    if (/(ed2k:|某些和谐词)/.test(value.word)) {
-      let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
-      ref.remove((data) => { console.log(1, data) })
-    }
-  })
+const adminTest = function () {
+  // User.authWithPassword({
+  //   email: 'hilongjw@qq.com',
+  //   password: '123456'
+  // }, (auth) => {
+  //   let authData = User.getAuth()
+  //   if (authData) {
+  //     console.log('Authenticated user with uid:', authData.uid)
+  //   }
+  // })
+  let authData = User.getAuth()
+  if (authData) {
+    console.log(authData.uid)
+  } else {
+    console.log('no auth')
+  }
+  User.unauth()
 }
-removeComment()
+adminTest()
+
+// const removeComment = function () {
+//   List.on('child_added', (obj) => {
+//     let value = obj.val()
+//     if (/(ed2k:|某些和谐词)/.test(value.word)) {
+//       let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
+//       ref.remove((data) => { console.log(1, data) })
+//     }
+//   })
+// }
+// removeComment()
 
 let roadIndex = 0
 const getRoadway = function () {
@@ -191,7 +214,7 @@ export default {
       this.showState.checkList = !this.showState.checkList
     },
     delItem (item) {
-      let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + item.key)
+      let ref = List.child(item.key)
       ref.remove((data) => {
         if (!data) {
           this.checkList.$remove(item)
@@ -257,13 +280,19 @@ export default {
         this.creatAlert('发表失败，可能字数太多啦')
         return false
       }
+      List.child('-KFdnHtr8pLcpak1IieK').remove((err) => {
+        console.log(err)
+      })
+      // List.set({
+      //   awe: null
+      // })
       List.push({
         nickname: this.nickname.value,
         word: this.input.say,
         avatar: this.avatar.value,
         color: this.input.color,
         tick: this.tick,
-        createddAt: Wilddog.ServerValue.TIMESTAMP
+        createddAt: DB.ServerValue.TIMESTAMP
       }, (err) => {
         if (!err) {
           this.input.say = ''
