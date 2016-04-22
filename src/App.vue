@@ -300,9 +300,6 @@ export default {
 </script>
 
 <style>
-body {
-  background: #ccc;
-}
 #__covMenu {
   position: fixed;
   bottom: 100px;
