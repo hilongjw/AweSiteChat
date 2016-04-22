@@ -27,14 +27,13 @@ import modal from './components/modal.vue'
 import covList from './components/list.vue'
 
 const DB = Wilddog // Firebase
-const AppId = 'livechat' //'glodchat-48777'
+const AppId = 'livechat' // 'glodchat-48777'
 const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
 const AVATAR = ['http://tp1.sinaimg.cn/1765813240/180/40054316852/1', 'http://tp2.sinaimg.cn/1968077401/180/5722082245/1', 'http://tp2.sinaimg.cn/2507347737/180/5716093192/1', 'http://ac-mhke0kuv.clouddn.com/918f366b6698038fff2c.jpg?imageView/1/w/100/h/100/q/80/format/png']
 
 let currentSite = document.domain.replace(/\./g, '-')
-currentSite = '127-0-0-1'
 let Site = new DB('https://' + AppId + '.wilddogio.com/' + currentSite)
 // let Site = new DB('https://' + AppId + '.firebaseio.com/' + currentSite)
 let List = Site.child('list')
