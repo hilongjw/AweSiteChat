@@ -5,8 +5,8 @@
     <cov-button id="__settingButton" v-show="showState.inputting" @click="showSet">SETTING</cov-button>
     <cov-button id="__adminButton" v-show="showState.admin" @click="showAdmin">ADMIN</cov-button>
   </div>
-  <cov-input :submit="submit" :input="input" v-show="showState.inputting"></cov-input>
-  <cov-fab-button @click='showInput'></cov-fab-button>
+  <cov-input :submit="submit" :input="input" :show-input="showInput" v-show="showState.inputting"></cov-input>
+  <cov-fab-button @click='showInput' v-show="!showState.inputting"></cov-fab-button>
   <modal v-show="showState.modal" :close="hideModal">
     <textfield :textfield="nickname"></textfield>
     <textfield :textfield="avatar"></textfield>
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-// import Wilddog from 'wilddog'
-import Firebase from 'firebase'
+import Wilddog from 'wilddog'
+// import Firebase from 'firebase'
 import covFabButton from './components/fabButton.vue'
 import covButton from './components/button.vue'
 import covInput from './components/input.vue'
@@ -26,37 +26,31 @@ import textfield from './components/textfield.vue'
 import modal from './components/modal.vue'
 import covList from './components/list.vue'
 
-const DB = Firebase
-const AppId = 'livevue'
+const DB = Wilddog // Firebase
+const AppId = 'livechat' //'glodchat-48777'
 const MaxCount = 20
 const roadWidth = 30
 const localStorage = window.localStorage
-const AVATAR = ['dist/img/1.jpg', 'dist/img/2.jpg', 'dist/img/3.jpg', 'dist/img/4.jpg']
+const AVATAR = ['http://tp1.sinaimg.cn/1765813240/180/40054316852/1', 'http://tp2.sinaimg.cn/1968077401/180/5722082245/1', 'http://tp2.sinaimg.cn/2507347737/180/5716093192/1', 'http://ac-mhke0kuv.clouddn.com/918f366b6698038fff2c.jpg?imageView/1/w/100/h/100/q/80/format/png']
 
 let currentSite = document.domain.replace(/\./g, '-')
-let Site = new DB('https://' + AppId + '.firebaseio.com/' + currentSite)
+currentSite = '127-0-0-1'
+let Site = new DB('https://' + AppId + '.wilddogio.com/' + currentSite)
+// let Site = new DB('https://' + AppId + '.firebaseio.com/' + currentSite)
 let List = Site.child('list')
-let User = Site.child('user')
 
-const adminTest = function () {
-  // User.authWithPassword({
-  //   email: 'hilongjw@qq.com',
-  //   password: '123456'
-  // }, (auth) => {
-  //   let authData = User.getAuth()
-  //   if (authData) {
-  //     console.log('Authenticated user with uid:', authData.uid)
-  //   }
-  // })
-  let authData = User.getAuth()
-  if (authData) {
-    console.log(authData.uid)
-  } else {
-    console.log('no auth')
-  }
-  User.unauth()
-}
-adminTest()
+// const adminTest = function () {
+//   Site.authWithPassword({email: 'hilongjw@qq.com', password: ''},
+//     function (err, data) {
+//       if (err === null) {
+//         console.log('auth success!')
+//       } else {
+//         console.log('auth failed,msg:', err)
+//       }
+//     }
+//   )
+// }
+// adminTest()
 
 // const removeComment = function () {
 //   List.on('child_added', (obj) => {
@@ -70,14 +64,15 @@ adminTest()
 // removeComment()
 
 let roadIndex = 0
-const getRoadway = function () {
+
+const getRoadway = function (scrollHeight) {
   roadIndex === 10 ? roadIndex = 0 : roadIndex++
-  return roadWidth * roadIndex
+  return roadWidth * roadIndex * Math.random()
 }
 
 const generateBullet = function (obj) {
-  let y = getRoadway()
   let item = obj.val()
+  let y = getRoadway()
   return {
     _key: obj.key() + Math.random(),
     key: obj.key(),
@@ -95,6 +90,7 @@ const generateBullet = function (obj) {
 
 const addNewItem = function (obj, self, realtime) {
   let newItem = generateBullet(obj)
+
   self.checkList.push(newItem)
   if (realtime) {
     self.list.push(newItem)
@@ -168,14 +164,18 @@ export default {
       },
       input: {
         color: 'rgb(113, 113, 113)',
-        say: '',
-        avatar: null
+        value: '',
+        avatar: null,
+        placeholder: '好尴尬，快说点什么!'
       },
       showState: {
         modal: false,
         inputting: true,
         checkList: false,
         admin: getLocalStorage('nickname') === 'Awe_admin'
+      },
+      inputBtn: {
+        disable: true
       },
       list: [],
       preList: [],
@@ -273,29 +273,23 @@ export default {
       }, 3000)
     },
     submit () {
-      if (!this.input.say) {
+      if (!this.input.value) {
         this.creatAlert('应该说点什么')
         return false
-      } else if (this.input.say.length > 40) {
+      } else if (this.input.value.length > 40) {
         this.creatAlert('发表失败，可能字数太多啦')
         return false
       }
-      List.child('-KFdnHtr8pLcpak1IieK').remove((err) => {
-        console.log(err)
-      })
-      // List.set({
-      //   awe: null
-      // })
       List.push({
         nickname: this.nickname.value,
-        word: this.input.say,
+        word: this.input.value,
         avatar: this.avatar.value,
         color: this.input.color,
         tick: this.tick,
         createddAt: DB.ServerValue.TIMESTAMP
       }, (err) => {
         if (!err) {
-          this.input.say = ''
+          this.input.value = ''
         } else {
           this.creatAlert('发表失败，可能字数太多啦')
           console.log(err)
@@ -307,6 +301,9 @@ export default {
 </script>
 
 <style>
+body {
+  background: #ccc;
+}
 #__covMenu {
   position: fixed;
   bottom: 100px;
@@ -318,5 +315,10 @@ export default {
 }
 #__settingButton:hover {
   background-color: rgba(158,158,158,.2);
+}
+@media (max-width: 960px) {
+  #__covMenu {
+    bottom: 60px;
+  }
 }
 </style>

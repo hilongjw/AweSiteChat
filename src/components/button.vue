@@ -1,5 +1,5 @@
 <template>
-  <button @click="reppleClick"  class="__cov-button-ripple" :class="{active: repple_button.toggle}">
+  <button @click="reppleClick"  class="__cov-button-ripple" :class="{active: repple_button.toggle, '__cov-button-disable': state.disable, '__cov-button-blue': state.color === 'blue'}">
     <slot></slot>
     <span class="__cov-ripple" :class="{'animate': repple_button.animate}"></span>
   </button>
@@ -7,6 +7,17 @@
 
 <script>
 export default {
+  props: {
+    'state': {
+      type: Object,
+      default: function () {
+        return {
+          disable: false,
+          color: 'common'
+        }
+      }
+    }
+  },
   data () {
     return {
       repple_button: {
@@ -41,7 +52,6 @@ export default {
   background: transparent;
   border: none;
   border-radius: 2px;
-  color: #000;
   position: relative;
   height: 36px;
   min-width: 64px;
@@ -65,9 +75,6 @@ export default {
   vertical-align: middle;
   min-width: 96px;
 }
-.__cov-button-ripple:hover {
-  background-color: hsla(0,0%,62%,.2);
-}
 .__cov-ripple {
   display: block; 
   position: absolute;
@@ -81,5 +88,22 @@ export default {
 
 @keyframes ripple {
   100% {opacity: 0; transform: scale(2.5);}
+}
+.__cov-button-disable {
+  background-color: #dcdcdc;
+  color: rgba(0,0,0,.26);
+}
+.__cov-button-common {
+  color: #000;
+}
+.__cov-button-common:hover {
+  background-color: hsla(0,0%,62%,.2);
+}
+.__cov-button-blue:hover {
+  background-color: #1ADEFA;
+}
+.__cov-button-blue {
+  background-color: #00BBD6;
+  color: #fff;
 }
 </style>

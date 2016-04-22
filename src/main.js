@@ -1,8 +1,11 @@
 import Vue from 'vue'
-import App from './App'
+import covApp from './App'
 
+let app = document.createElement('cov-app')
+document.body.appendChild(app)
 /* eslint-disable no-new */
 new Vue({
   el: 'body',
-  components: { App }
+  components: { 'cov-app': covApp }
 })
+

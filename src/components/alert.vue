@@ -24,7 +24,7 @@ export default {
   max-width: 200px;
 }
 .alert-transition {
-  transform: translateY(0); /* 否则 scale 动画不起作用 */
+  transform: translateY(0);
 }
 .alert-enter {
   animation: alert-in .5s;

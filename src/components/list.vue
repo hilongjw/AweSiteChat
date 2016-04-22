@@ -135,4 +135,12 @@ export default {
     float: right;
     margin: 5px 0;
   }
+  @media (max-width: 960px) { 
+  .__cov-check {
+    width: 100%;
+  }
+  .__cov-check-item {
+    width: 100%;
+  }
+}
 </style>

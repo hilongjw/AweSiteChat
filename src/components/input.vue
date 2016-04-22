@@ -1,110 +1,79 @@
 <template>
-  <div id="__covInput">
-    <input 
-      type="text" 
-      name="say" 
-      id="__covInputText"
-      v-model="input.say" 
-      @keyup.13="submit"
-      @focus='inputFocus'
-      @blur='inputblur'
-      >
-    <label id="__covInputText__label" for="__covInputText">好尴尬，快说点什么！Enter 提交</label>
+  <div class="__cov-input-box">
+    <textfield class="__cov-input" :textfield="input" @keyup.13="submit"></textfield>
+    <cov-button class="__cov-send-btn" @click="sendAction" :state="state">{{state.disable ? 'CANCEL':'SEND'}}</cov-button>
   </div>
 </template>
 
 <script>
+import covButton from './button.vue'
+import textfield from './textfield.vue'
 export default {
-  props: ['input', 'submit'],
+  props: ['input', 'submit', 'show-input'],
+  computed: {
+    state () {
+      if (this.input.value === '') {
+        return {
+          disable: true,
+          color: 'common'
+        }
+      } else {
+        return {
+          disable: false,
+          color: 'blue'
+        }
+      }
+    }
+  },
+  components: {
+    covButton,
+    textfield
+  },
   methods: {
-    inputFocus (e) {
-      e.target.parentNode.setAttribute('class', 'active')
-    },
-    inputblur (e) {
-      e.target.parentNode.setAttribute('class', '')
+    sendAction () {
+      if (this.input.value) {
+        this.submit()
+      } else {
+        this.showInput()
+      }
     }
   }
 }
 </script>
 
 <style>
-#__covInput {
+.__cov-input {
+  display: inline-block;
+}
+.__cov-input-box {
   position: fixed;
-  bottom: 20px;
-  right: 120px;
-  width: 300px;
-  padding: 20px 0;
-  font-family: 'Roboto','Helvetica', "Microsoft YaHei", 'Arial', sans-serif;
-}
-#__covInputText {
-  border: none;
-  border-bottom: 1px solid rgba(0,0,0,.12);
-  display: block;
-  font-size: 16px;
-  margin: 0;
-  padding: 4px 0;
-  width: 100%;
-  background: 0 0;
-  text-align: left;
-  color: inherit;
-  outline: none;
-}
-#__covInputText__label {
-  bottom: 0;
-  color: rgba(0,0,0,.26);
-  font-size: 16px;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-  position: absolute;
-  display: block;
-  top: 24px;
-  width: 100%;
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  transition-duration: .2s;
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
-}
-#__covInputText__label::after{
-  content: '';
-  background-color: #3f51b5;
-  bottom: 20px;
-  height: 2px;
-  left: 45%;
-  position: absolute;
-  transition-duration: .2s;
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
-  visibility: hidden;
-  width: 10px;
-}
-.active #__covInputText__label {
-  top: 4px;
-  color: #3f51b5;
-  font-size: 12px;
-}
-.active #__covInputText__label::after {
-  visibility: visible;
-  left: 0%;
-  width: 100%;
+  bottom: 13px;
+  right: 20px;
+  background: #fff;
+  padding: 0 20px;
+  border-radius: 2px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 }
 @media (max-width: 960px) { 
-  #__covInput {
+  .__cov-input-box {
+    bottom: 0;
     width: 100%;
-    left: 0;
-    bottom: -20px;
-    background-color: #fff;
-    padding-top: 0;
+    right: 0;
+    padding: 0 100px 0 10px;
+    box-sizing: border-box;
   }
-  #__covInputText {
-    padding: 10px;
+  .__cov-send-btn {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    min-width: 50px;
   }
-  #__covInputText__label {
-    top: 8px;
-    left: 5px;
+  .__cov-input {
+    width: 100%;
+    padding-bottom: 0px!important;
   }
-  .active #__covInputText__label{
-    top: -14px;
+  .__cov-check {
+    width: 100%;
   }
 }
 </style>

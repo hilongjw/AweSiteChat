@@ -1,5 +1,11 @@
 <template>
-  <button @click="reppleClick" id="__covAdd" class="want-btn" :class="{active: repple_button.toggle}">
+  <button 
+    @click="reppleClick"
+    id="__covAdd" 
+    class="want-btn" 
+    :class="{active: repple_button.toggle}"
+    transition="fab"
+  >
     <span class="__covAdd__text">+</span>
     <span class="ink" :class="{'animate': repple_button.animate}"></span>
   </button>
@@ -77,5 +83,30 @@ export default {
 .active .__covAdd__text {
   display: inline-block;
   transform: rotate(45deg);
+}
+.fab-transition {
+  transform: translateX(0);
+}
+.fab-enter {
+  animation: fab-in .5s;
+}
+.fab-leave {
+  animation: fab-out .5s;
+}
+@keyframes fab-in {
+  0% {
+    transform: translateX(50px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes fab-out {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(90px);
+  }
 }
 </style>
