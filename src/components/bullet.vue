@@ -32,8 +32,8 @@ export default {
   font-size: .9em;
   will-change: transform;
   border-radius: 3rem;
-  transform: translateX(200%);
-  -webkit-transform: translateX(200%);
+  transform: translateX(250%);
+  -webkit-transform: translateX(250%);
   -webkit-transition: cubic-bezier(.25, .5, .5, .25) transform 6s;
   transition: cubic-bezier(.25, .5, .5, .25) transform 6s;
 }
