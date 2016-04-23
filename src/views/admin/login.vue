@@ -2,11 +2,11 @@
   <div class="__cov-modal">
     <div class="__cov-modal-title">登录</div>
     <div class="__cov-modal-text">
-      <textfield :textfield="username"></textfield>
-      <textfield :textfield="password"></textfield>
+      <textfield :textfield="login.username"></textfield>
+      <textfield :textfield="login.password"></textfield>
     </div>
     <div class="__cov-modal-actions">
-      <cov-button class="__cov-modal-btn">LOGIN</cov-button>
+      <cov-button @click="action" class="__cov-modal-btn">LOGIN</cov-button>
     </div>
   </div>
 </template>
@@ -15,18 +15,7 @@
 import covButton from '../../components/button.vue'
 import textfield from '../../components/textfield.vue'
 export default {
-  data () {
-    return {
-      username: {
-        value: '',
-        placeholder: 'username'
-      },
-      password: {
-        value: '',
-        placeholder: 'password'
-      }
-    }
-  },
+  props: ['login', 'action'],
   components: {
     covButton,
     textfield

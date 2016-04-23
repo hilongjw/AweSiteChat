@@ -21,24 +21,13 @@
   </nav>
   <router-view :check-list="checkList" ></router-view>
   <cov-alert :alert="Alert"></cov-alert>
+  <login v-if="Login.show" :login="Login" :action="goLogin"></login>
 </template>
 
 <script>
 import { Site, List, generateBullet } from '../helper'
 import { navTab, covAlert } from '../components/index'
-
-const adminTest = function () {
-  Site.authWithPassword({email: 'hilongjw@qq.com', password: 'wlongjw'},
-    function (err, data) {
-      if (err === null) {
-        console.log('auth success!')
-      } else {
-        console.log('auth failed,msg:', err)
-      }
-    }
-  )
-}
-adminTest()
+import login from './admin/login.vue'
 
 const loadRealtime = function (self) {
   List.orderByChild('tick').on('child_added', (newObj) => {
@@ -64,6 +53,17 @@ export default {
         message: '',
         show: false
       },
+      Login: {
+        show: true,
+        username: {
+          value: '',
+          placeholder: 'username'
+        },
+        password: {
+          value: '',
+          placeholder: 'password'
+        }
+      },
       checkList: []
 
     }
@@ -73,7 +73,8 @@ export default {
   },
   components: {
     navTab,
-    covAlert
+    covAlert,
+    login
   },
   events: {
     'del-item': function (item) {
@@ -81,6 +82,19 @@ export default {
     }
   },
   methods: {
+    goLogin () {
+      Site.authWithPassword({
+        email: this.Login.username.value,
+        password: this.Login.password.value
+      }, (err, data) => {
+        if (err === null) {
+          this.creatAlert('auth success!')
+          this.Login.show = false
+        } else {
+          this.creatAlert('auth failed,msg:', err)
+        }
+      })
+    },
     creatAlert (message) {
       this.Alert.message = message
       this.Alert.show = true
