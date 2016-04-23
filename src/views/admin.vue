@@ -20,11 +20,12 @@
     >FAQ</nav-tab>
   </nav>
   <router-view :check-list="checkList" ></router-view>
+  <cov-alert :alert="Alert"></cov-alert>
 </template>
 
 <script>
 import { Site, List, generateBullet } from '../helper'
-import { navTab } from '../components/index'
+import { navTab, covAlert } from '../components/index'
 
 const adminTest = function () {
   Site.authWithPassword({email: 'hilongjw@qq.com', password: 'wlongjw'},
@@ -59,6 +60,10 @@ export default {
           active: false
         }
       },
+      Alert: {
+        message: '',
+        show: false
+      },
       checkList: []
 
     }
@@ -67,14 +72,39 @@ export default {
     loadRealtime(this)
   },
   components: {
-    navTab
+    navTab,
+    covAlert
+  },
+  events: {
+    'del-item': function (item) {
+      this.delItem(item)
+    }
   },
   methods: {
+    creatAlert (message) {
+      this.Alert.message = message
+      this.Alert.show = true
+      setTimeout(() => {
+        this.Alert.show = false
+        this.Alert.message = ''
+      }, 3000)
+    },
     navClick (tab) {
       this.nav.setting.active = false
       this.nav.list.active = false
       this.nav.faq.active = false
       tab.active = true
+    },
+    delItem (item) {
+      let ref = List.child(item.key)
+      ref.remove((data) => {
+        if (!data) {
+          this.checkList.$remove(item)
+          this.creatAlert('del done')
+        } else {
+          this.creatAlert('failed to del', item.username, item.word)
+        }
+      })
     }
   }
 }

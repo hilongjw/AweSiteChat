@@ -1,9 +1,8 @@
 <template>
-  <div class="__cov-modal">
-    <div class="__cov-modal-title">登录</div>
+  <div>
+    <div class="__cov-modal-title">FAQ</div>
     <div class="__cov-modal-text">
-      <textfield :textfield="username"></textfield>
-      <textfield :textfield="password"></textfield>
+      <p>233333333</p>
     </div>
     <div class="__cov-modal-actions">
       <cov-button class="__cov-modal-btn">LOGIN</cov-button>
@@ -12,8 +11,8 @@
 </template>
 
 <script>
-import covButton from '../../components/button.vue'
-import textfield from '../../components/textfield.vue'
+import { covButton } from '../../components/index'
+
 export default {
   data () {
     return {
@@ -28,8 +27,7 @@ export default {
     }
   },
   components: {
-    covButton,
-    textfield
+    covButton
   }
 }
 </script>

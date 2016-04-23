@@ -42,7 +42,7 @@ export default {
       } else {
         let haveIt = new RegExp(this.search.value, 'g')
         return this.checkList.filter((item) => {
-          if (haveIt.test(item.word)) {
+          if (haveIt.test(item.word) || haveIt.test(item.nickname)) {
             return true
           }
           return false
