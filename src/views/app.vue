@@ -17,14 +17,14 @@
 <script>
 import Wilddog from 'wilddog'
 // import Firebase from 'firebase'
-import covFabButton from './components/fabButton.vue'
-import covButton from './components/button.vue'
-import covInput from './components/input.vue'
-import covBullet from './components/bullet.vue'
-import covAlert from './components/alert.vue'
-import textfield from './components/textfield.vue'
-import modal from './components/modal.vue'
-import covList from './components/list.vue'
+import covFabButton from '../components/fabButton.vue'
+import covButton from '../components/button.vue'
+import covInput from '../components/input.vue'
+import covBullet from '../components/bullet.vue'
+import covAlert from '../components/alert.vue'
+import textfield from '../components/textfield.vue'
+import modal from '../components/modal.vue'
+import covList from '../components/list.vue'
 
 const DB = Wilddog // Firebase
 const AppId = 'livechat' // 'glodchat-48777'

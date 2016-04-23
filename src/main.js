@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import covApp from './App'
+import covApp from './views/app'
 
 let app = document.createElement('cov-app')
 document.body.appendChild(app)
