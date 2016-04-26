@@ -6,7 +6,7 @@
       <textfield :textfield="password"></textfield>
     </div>
     <div>
-      <cov-button class="__cov-modal-btn">LOGIN</cov-button>
+      <cov-button class="__cov-modal-btn">SAVE</cov-button>
     </div>
   </div>
 </template>

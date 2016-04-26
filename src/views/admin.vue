@@ -1,33 +1,14 @@
 <template>
-  <nav class="__cov-admin-nav">
-    <nav-tab 
-      class="__cov-admin-nav-tab"
-      @click="navClick(nav.setting)"
-      :state="nav.setting"
-      v-link="{ path: 'setting' }"
-    >SETTING</nav-tab>
-    <nav-tab 
-      class="__cov-admin-nav-tab"
-      @click="navClick(nav.list)"
-      :state="nav.list"
-      v-link="{ path: 'list' }"
-    >LIST</nav-tab>
-    <nav-tab 
-      class="__cov-admin-nav-tab"
-      @click="navClick(nav.faq)"
-      :state="nav.faq"
-      v-link="{ path: 'faq' }"
-    >FAQ</nav-tab>
-  </nav>
-  <router-view :check-list="checkList" ></router-view>
+  <dashboard v-if="!Login.show" :check-list="checkList"></dashboard>
   <cov-alert :alert="Alert"></cov-alert>
   <login v-if="Login.show" :login="Login" :action="goLogin"></login>
 </template>
 
 <script>
 import { Site, List, generateBullet } from '../helper'
-import { navTab, covAlert } from '../components/index'
+import { covAlert } from '../components/index'
 import login from './admin/login.vue'
+import dashboard from './admin/dashboard.vue'
 
 const loadRealtime = function (self) {
   List.orderByChild('tick').on('child_added', (newObj) => {
@@ -38,17 +19,6 @@ const loadRealtime = function (self) {
 export default {
   data () {
     return {
-      nav: {
-        setting: {
-          active: false
-        },
-        list: {
-          active: false
-        },
-        faq: {
-          active: false
-        }
-      },
       Alert: {
         message: '',
         show: false
@@ -56,7 +26,7 @@ export default {
       Login: {
         show: true,
         username: {
-          value: '',
+          value: 'hilongjw@qq.com',
           placeholder: 'username'
         },
         password: {
@@ -65,19 +35,15 @@ export default {
         }
       },
       checkList: []
-
     }
   },
-  created () {
-    loadRealtime(this)
-  },
   components: {
-    navTab,
+    dashboard,
     covAlert,
     login
   },
   events: {
-    'del-item': function (item) {
+    'top-del-item': function (item) {
       this.delItem(item)
     }
   },
@@ -90,6 +56,7 @@ export default {
         if (err === null) {
           this.creatAlert('auth success!')
           this.Login.show = false
+          loadRealtime(this)
         } else {
           this.creatAlert('auth failed,msg:', err)
         }
@@ -102,12 +69,6 @@ export default {
         this.Alert.show = false
         this.Alert.message = ''
       }, 3000)
-    },
-    navClick (tab) {
-      this.nav.setting.active = false
-      this.nav.list.active = false
-      this.nav.faq.active = false
-      tab.active = true
     },
     delItem (item) {
       let ref = List.child(item.key)

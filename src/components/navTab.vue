@@ -92,7 +92,7 @@ export default {
 .__cov-ripple {
   display: block; 
   position: absolute;
-  background: hsla(0, 0%, 65%, 0.66);
+  background: hsla(0, 0%, 100%, 0.66);
   border-radius: 100%;
   transform: scale(0);
 }
