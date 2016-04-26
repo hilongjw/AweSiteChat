@@ -1,5 +1,5 @@
 <template>
-  <dashboard v-if="!Login.show" :check-list="checkList"></dashboard>
+  <dashboard v-if="!Login.show"></dashboard>
   <cov-alert :alert="Alert"></cov-alert>
   <login v-if="Login.show" :login="Login" :action="goLogin"></login>
 </template>
@@ -9,20 +9,29 @@ import { Site, List, generateBullet } from '../helper'
 import { covAlert } from '../components/index'
 import login from './admin/login.vue'
 import dashboard from './admin/dashboard.vue'
+import store from '../vuex/admin/store'
+import { showAlert, addCheckList } from '../vuex/admin/action'
 
 const loadRealtime = function (self) {
   List.orderByChild('tick').on('child_added', (newObj) => {
-    self.checkList.push(generateBullet(newObj))
+    self.addCheckList(generateBullet(newObj))
   })
 }
 
 export default {
+  store: store,
+  vuex: {
+    getters: {
+      Alert: state => state.Alert,
+      checkList: state => state.checkList
+    },
+    actions: {
+      showAlert,
+      addCheckList
+    }
+  },
   data () {
     return {
-      Alert: {
-        message: '',
-        show: false
-      },
       Login: {
         show: true,
         username: {
@@ -33,19 +42,13 @@ export default {
           value: '',
           placeholder: 'password'
         }
-      },
-      checkList: []
+      }
     }
   },
   components: {
     dashboard,
     covAlert,
     login
-  },
-  events: {
-    'top-del-item': function (item) {
-      this.delItem(item)
-    }
   },
   methods: {
     goLogin () {
@@ -54,30 +57,11 @@ export default {
         password: this.Login.password.value
       }, (err, data) => {
         if (err === null) {
-          this.creatAlert('auth success!')
+          this.showAlert('auth success!')
           this.Login.show = false
           loadRealtime(this)
         } else {
-          this.creatAlert('auth failed,msg:', err)
-        }
-      })
-    },
-    creatAlert (message) {
-      this.Alert.message = message
-      this.Alert.show = true
-      setTimeout(() => {
-        this.Alert.show = false
-        this.Alert.message = ''
-      }, 3000)
-    },
-    delItem (item) {
-      let ref = List.child(item.key)
-      ref.remove((data) => {
-        if (!data) {
-          this.checkList.$remove(item)
-          this.creatAlert('del done')
-        } else {
-          this.creatAlert('failed to del', item.username, item.word)
+          this.showAlert('auth failed,msg:', err)
         }
       })
     }

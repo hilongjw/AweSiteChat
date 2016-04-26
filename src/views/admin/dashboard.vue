@@ -24,14 +24,17 @@
     >FAQ</nav-tab>
   </nav>
   </header>
-  <router-view :check-list="checkList" ></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
 import { navTab } from '../../components/index'
 
 export default {
-  props: ['checkList'],
+  vuex: {
+    getters: {
+    }
+  },
   data () {
     return {
       nav: {

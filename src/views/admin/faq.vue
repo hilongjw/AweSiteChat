@@ -2,7 +2,7 @@
   <div>
     <div class="__cov-modal-title">FAQ</div>
     <div class="__cov-modal-text">
-      <p>233333333</p>
+      <p @click="alertMe">233333333</p>
     </div>
     <div class="__cov-modal-actions">
       <cov-button class="__cov-modal-btn">LOGIN</cov-button>
@@ -12,8 +12,14 @@
 
 <script>
 import { covButton } from '../../components/index'
+import { showAlert } from '../../vuex/admin/action'
 
 export default {
+  vuex: {
+    actions: {
+      showAlert
+    }
+  },
   data () {
     return {
       username: {
@@ -28,6 +34,11 @@ export default {
   },
   components: {
     covButton
+  },
+  methods: {
+    alertMe () {
+      this.showAlert('asdknaksfnkasfn')
+    }
   }
 }
 </script>

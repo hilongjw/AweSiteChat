@@ -1,28 +1,17 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import VueRouter from 'vue-router'
+import { sync } from 'vuex-router-sync'
 
 import App from './views/admin'
+import store from './vuex/admin/store'
+import router from './router/admin'
 
 Vue.use(VueRouter)
+Vue.use(Vuex)
 
-const router = new VueRouter()
+Vue.config.debug = true
 
-router.map({
-  '/faq': {
-    component: function (resolve) {
-      require(['./views/admin/faq.vue'], resolve)
-    }
-  },
-  '/list': {
-    component: function (resolve) {
-      require(['./views/admin/list.vue'], resolve)
-    }
-  },
-  '/setting': {
-    component: function (resolve) {
-      require(['./views/admin/setting.vue'], resolve)
-    }
-  }
-})
+sync(store, router)
 
 router.start(App, 'app')

@@ -22,11 +22,20 @@
 </template>
 
 <script>
-import '../../helper'
+import { List } from '../../helper'
 import { covButton, textfield } from '../../components/index'
+import { removeCheckList, showAlert } from '../../vuex/admin/action'
 
 export default {
-  props: ['checkList'],
+  vuex: {
+    getters: {
+      checkList: state => state.checkList
+    },
+    actions: {
+      removeCheckList,
+      showAlert
+    }
+  },
   data () {
     return {
       search: {
@@ -56,7 +65,15 @@ export default {
   },
   methods: {
     delItem (item) {
-      this.$dispatch('del-item', item)
+      let ref = List.child(item.key)
+      ref.remove((data) => {
+        if (!data) {
+          this.removeCheckList(item)
+          this.showAlert('del done')
+        } else {
+          this.showAlert('failed to del', item.username, item.word)
+        }
+      })
     }
   }
 }
