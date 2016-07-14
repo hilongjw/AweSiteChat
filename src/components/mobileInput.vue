@@ -49,7 +49,7 @@
 <template>
   <div class="cov-chat-input-container">
     <div class="cov-chat-input">
-      <input type="text" class="cov-chat-inputing" v-model="input">
+      <input type="text" class="cov-chat-inputing" @keyup.enter="send" v-model="input">
     </div>
     <div class="cov-chat-send">
       <button class="cov-chat-send-btn" @click="send">发送</button>
