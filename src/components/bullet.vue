@@ -55,7 +55,7 @@ export default {
   -webkit-transform: translateX(-130vw);
 }
 
-@media screen (max-width: 500px) { 
+@media (max-width: 500px) { 
   .flying {
     transform: translateX(-600px);
     -webkit-transform: translateX(-600px);
@@ -63,7 +63,7 @@ export default {
     -webkit-transform: translateX(-150vw);
   }
 }
-@media screen  (max-width: 1000px) { 
+@media (max-width: 1000px) { 
   .flying {
     transform: translateX(-1100px);
     -webkit-transform: translateX(-1100px);
@@ -75,7 +75,7 @@ export default {
     transition: cubic-bezier(.25, .5, .5, .25) transform 5s;
   }
 }
-@media screen (max-width: 1600px) { 
+@media (max-width: 1600px) {
   .flying {
     transform: translateX(-1700px);
     -webkit-transform: translateX(-1700px);

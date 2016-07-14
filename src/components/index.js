@@ -7,6 +7,7 @@ import textfield from './textfield.vue'
 import modal from './modal.vue'
 import covList from './list.vue'
 import navTab from './navTab.vue'
+import mobileInput from './mobileInput.vue'
 
 export {
   covFabButton,
@@ -17,5 +18,6 @@ export {
   textfield,
   modal,
   covList,
-  navTab
+  navTab,
+  mobileInput
 }

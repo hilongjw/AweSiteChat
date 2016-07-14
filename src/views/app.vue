@@ -5,12 +5,12 @@
     <cov-button id="__settingButton" v-show="showState.inputting" @click="showSet">SETTING</cov-button>
     <cov-button id="__adminButton" v-show="showState.admin" @click="showAdmin">ADMIN</cov-button>
   </div>
-  <cov-input :submit="submit" :input="input" :show-input="showInput" v-show="showState.inputting"></cov-input>
   <cov-fab-button @click='showInput' v-show="!showState.inputting"></cov-fab-button>
   <modal v-show="showState.modal" :close="hideModal">
     <textfield :textfield="nickname"></textfield>
     <textfield :textfield="avatar"></textfield>
   </modal>
+  <mobile-input :send-action="submitAction"></mobile-input>
   <cov-list :check-list="checkList" v-if="showState.checkList" :close="hideCheckList"></cov-list>
 </template>
 
@@ -33,7 +33,8 @@ import {
   covAlert,
   textfield,
   modal,
-  covList
+  covList,
+  mobileInput
 } from '../components/index'
 
 const addNewItem = function (obj, self, realtime) {
@@ -111,7 +112,8 @@ export default {
     covAlert,
     textfield,
     modal,
-    covList
+    covList,
+    mobileInput
   },
   created () {
     this.timer = setInterval(() => {
@@ -187,17 +189,17 @@ export default {
         this.Alert.message = ''
       }, 3000)
     },
-    submit () {
-      if (!this.input.value) {
+    submitAction (value) {
+      if (!value) {
         this.creatAlert('应该说点什么')
         return false
-      } else if (this.input.value.length > 40) {
+      } else if (value.length > 40) {
         this.creatAlert('发表失败，可能字数太多啦')
         return false
       }
       List.push({
         nickname: this.nickname.value,
-        word: this.input.value,
+        word: value,
         avatar: this.avatar.value,
         color: this.input.color,
         tick: this.tick,
@@ -210,6 +212,9 @@ export default {
           console.log(err)
         }
       })
+    },
+    submit () {
+      this.submitAction(this.input.value)
     }
   }
 }
