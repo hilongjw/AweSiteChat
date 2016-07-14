@@ -36,30 +36,6 @@ import {
   covList
 } from '../components/index'
 
-// const adminTest = function () {
-//   Site.authWithPassword({email: 'hilongjw@qq.com', password: ''},
-//     function (err, data) {
-//       if (err === null) {
-//         console.log('auth success!')
-//       } else {
-//         console.log('auth failed,msg:', err)
-//       }
-//     }
-//   )
-// }
-// adminTest()
-
-// const removeComment = function () {
-//   List.on('child_added', (obj) => {
-//     let value = obj.val()
-//     if (/(ed2k:|某些和谐词)/.test(value.word)) {
-//       let ref = new Wilddog('https://livechat.wilddogio.com/' + currentSite + '/list/' + obj.key())
-//       ref.remove((data) => { console.log(1, data) })
-//     }
-//   })
-// }
-// removeComment()
-
 const addNewItem = function (obj, self, realtime) {
   let newItem = generateBullet(obj)
 
@@ -201,7 +177,7 @@ export default {
             this.render(preItem, false)
           })
         }
-      }, outtime + 6000)
+      }, outtime + 7000)
     },
     creatAlert (message) {
       this.Alert.message = message

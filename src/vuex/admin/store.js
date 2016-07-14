@@ -12,18 +12,18 @@ const state = {
 }
 
 const mutations = {
-  ['SHOW_ALERT'] (state, msg) {
+  'SHOW_ALERT' (state, msg) {
     state.Alert.message = msg
     state.Alert.show = true
   },
-  ['HIDE_ALERT'] (state, msg) {
+  'HIDE_ALERT' (state, msg) {
     state.Alert.message = ''
     state.Alert.show = false
   },
-  ['ADD_CHECKLIST'] (state, item) {
+  'ADD_CHECKLIST' (state, item) {
     state.checkList.push(item)
   },
-  ['REMOVE_CHECKLIST'] (state, item) {
+  'REMOVE_CHECKLIST' (state, item) {
     state.checkList.$remove(item)
   }
 }

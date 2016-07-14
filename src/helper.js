@@ -1,7 +1,7 @@
 import Wilddog from 'wilddog'
 const DB = Wilddog // Firebase
 const AppId = 'livechat' // 'glodchat-48777'
-const currentSite = document.domain.replace(/(\.|\#)/g, '-')
+const currentSite = document.domain.replace(/(\.|#)/g, '-')
 // currentSite = '127.0.0.1'
 const Site = new DB('https://' + AppId + '.wilddogio.com/' + currentSite)
 // let Site = new DB('https://' + AppId + '.firebaseio.com/' + currentSite)
