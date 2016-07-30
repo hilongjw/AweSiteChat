@@ -8,6 +8,7 @@ import modal from './modal.vue'
 import covList from './list.vue'
 import navTab from './navTab.vue'
 import mobileInput from './mobileInput.vue'
+import Upload from './upload.vue'
 
 export {
   covFabButton,
@@ -19,5 +20,6 @@ export {
   modal,
   covList,
   navTab,
-  mobileInput
+  mobileInput,
+  Upload
 }

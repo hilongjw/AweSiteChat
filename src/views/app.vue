@@ -7,8 +7,10 @@
   </div>
   <cov-fab-button @click='showInput' v-show="!showState.inputting"></cov-fab-button>
   <modal v-show="showState.modal" :close="hideModal">
+    <upload @upload-success="handleAvatar" @upload-error="handleUploadError"></upload>
     <textfield :textfield="nickname"></textfield>
-    <textfield :textfield="avatar"></textfield>
+    <!-- <textfield :textfield="avatar"></textfield> -->
+    
   </modal>
   <mobile-input :send-action="submitAction"></mobile-input>
   <cov-list :check-list="checkList" v-if="showState.checkList" :close="hideCheckList"></cov-list>
@@ -34,7 +36,8 @@ import {
   textfield,
   modal,
   covList,
-  mobileInput
+  mobileInput,
+  Upload
 } from '../components/index'
 
 const addNewItem = function (obj, self, realtime) {
@@ -113,7 +116,8 @@ export default {
     textfield,
     modal,
     covList,
-    mobileInput
+    mobileInput,
+    Upload
   },
   created () {
     this.timer = setInterval(() => {
@@ -154,6 +158,13 @@ export default {
       this.showState.modal = false
       setLocalStorage('nickname', this.nickname.value)
       setLocalStorage('avatar', this.avatar.value)
+    },
+    handleAvatar (url) {
+      this.creatAlert('上传成功')
+      this.avatar.value = url
+    },
+    handleUploadError () {
+      this.creatAlert('上传失败，可能网速有问题啦')
     },
     render (item, realtime) {
       let wait = item.tick * 1000

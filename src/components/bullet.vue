@@ -4,7 +4,7 @@
     :style="item.position"
     :class="{'__cov-flying': item.flying}"
   >
-  <img class="__cov-item-avatar" v-if="item.avatar" :src="item.avatar">
+  <div class="__cov-item-avatar" v-if="item.avatar" :style="{ 'background-image': 'url(' + item.avatar +'?imageView/2/w/200/h/200/q/100/format/png)'}"></div>
   <span class="__cov-item-username">
     {{item.nickname}}
   </span>
@@ -44,6 +44,7 @@ export default {
   width: 42px;
   height: 42px;
   border-radius: 50%;
+  background-size: cover;
 }
 .__cov-item-username {
   color: #00BBD6;

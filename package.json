@@ -15,6 +15,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.0",
     "firebase": "^2.4.2",
+    "leancloud-storage": "^1.3.2",
     "vue": "^1.0.18",
     "wilddog": "^0.6.2"
   },
